@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle Game</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+
+        }
+
+        #parent {
+            /* height: 100vh;
+            width: 100vw; */
+            background-color: rgb(59, 9, 74);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+
+        }
+        
+
+        #parent h1 {
+            color: white;
+            font-size: 50px;
+            margin-bottom: 30px;
+            text-align: center;
+            width:100%; /*important*/
+            /* animation: glow 2s infinite alternate; */
+        }
+
+
+
+
+        #puzzle-div {
+            height: 450px;
+            width: 450px;
+            background-color: orange;
+            display: flex;
+            flex-wrap: wrap;
+
+
+
+        }
+
+        .card {
+            height: 150px;
+            width: 150px;
+            background-color: yellowgreen;
+            border: 1px solid black;
+            box-sizing: border-box;
+            /* border-radius: 10px; */
+        }
+
+        .card img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        #solved {
+            background-color: rgb(217, 103, 173);
+            border: 3px solid rgb(217, 103, 173);
+            box-sizing: border-box;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+
+
+
+        }
+
+        #moves {
+            height: 30px;
+            width: 50px;
+            background-color: rgb(68, 68, 211);
+            font-size: 30px;
+
+
+        }
+
+        #parent p {
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        #parent button {
+            font-size: 30px;
+            cursor: pointer;
+            padding: 4px 8px;
+            color: white;
+
+            border: none;
+            border-radius: 8px;
+        }
+
+        #message {
+            color: white;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="parent">
+        <h1><u>PUZZLE GAME</u></h1>
+        <div id="solved"></div>
+        <div id="message"></div>
+
+        <div id="puzzle-div">
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+        </div>
+
+        <br />
+        <p>Moves: <span id="moveDisplay">0</span></p>
+        <br />
+        <button onclick="location.reload()">Restart</button>
+    </div>
+    <script>
+        let cards = document.querySelectorAll(".card");
+
+        let foldername = "images/";
+        let allimages = [
+            "row-1-column-3.jpg",
+            "row-2-column-2.jpg",
+            "row-1-column-2.jpg",
+            "row-2-column-1.jpg",
+            "row-3-column-1.jpg",
+            "row-2-column-3.jpg",
+            "row-1-column-1.jpg",
+            "row-3-column-3.jpg",
+            "row-3-column-2.jpg"
+
+        ];
+
+        let solvedpuzzle = [
+            "row-1-column-1.jpg",
+            "row-1-column-2.jpg",
+            "row-1-column-3.jpg",
+            "row-2-column-1.jpg",
+            "row-2-column-2.jpg",
+            "row-2-column-3.jpg",
+            "row-3-column-1.jpg",
+            "row-3-column-2.jpg",
+            "row-3-column-3.jpg",
+
+        ]
+
+
+        let i = -1;
+        let j = -1;
+
+        cards.forEach((child, index) => {
+
+            child.innerHTML = `<img src="${foldername + allimages[index]}"/>`;
+            child.addEventListener("click", () => {
+                tap(index)
+            });
+        })
+
+
+        function tap(index) {
+
+            if (i < 0) {
+
+                i = index;
+            }
+            else {
+
+                j = index;
+            }
+
+            if (i >= 0 && j >= 0) {
+                let firstimage = allimages[i];
+                allimages[i] = allimages[j];
+                allimages[j] = firstimage;
+
+
+                cards.forEach((child, index) => {
+
+                    child.innerHTML = `<img src="${foldername + allimages[index]}"/>`;
+
+
+                })
+
+                checkwinner();
+
+                i = -1;
+                j = -1;
+
+            }
+        }
+        function checkwinner() {
+            if (solvedpuzzle.toString() === allimages.toString()) {
+                console.log("puzzle solved");
+
+                solved.innerHTML = "<i> Congratulations! Puzzle Solved! </i>";
+            }
+        }
+
+
+
+        let moves = 0;
+        let first = null;
+
+        cards.forEach(card => {
+            card.addEventListener("click", () => {
+                if (!first) {
+                    first = card;
+                } else {
+                    let temp = first.style.order;
+                    first.style.order = card.style.order;
+                    card.style.order = temp;
+
+                    first = null;
+
+                    // sirf swap hone per move count badega
+                    moves++;
+                    moveDisplay.innerText = moves;
+                    if (moves == 6) {
+                        document.querySelector("#message").innerHTML = "Please Try Again";
+                        moves = 0;
+                    }
+                }
+            });
+        });
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
